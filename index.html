@@ -28,6 +28,7 @@
             --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
             --gradient-1: linear-gradient(135deg, #3b82f6, #06b6d4);
             --gradient-2: linear-gradient(135deg, #8b5cf6, #ec4899);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
 
         [data-theme="light"] {
@@ -46,6 +47,7 @@
             color: var(--text-primary);
             line-height: 1.6;
             transition: background 0.3s, color 0.2s;
+            overflow-x: hidden;
         }
 
         .container {
@@ -71,6 +73,12 @@
             background-clip: text;
             color: transparent;
             margin-bottom: 1.5rem;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8)); }
         }
 
         h2 {
@@ -90,6 +98,12 @@
             height: 4px;
             background: var(--gradient-1);
             border-radius: 4px;
+            animation: lineGrow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes lineGrow {
+            from { width: 60px; }
+            to { width: 120px; }
         }
 
         .btn {
@@ -102,10 +116,30 @@
             border-radius: 9999px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: none;
             cursor: pointer;
             font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-outline {
@@ -117,12 +151,13 @@
         .btn-outline:hover {
             background: var(--primary);
             color: white;
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--glow);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(59,130,246,0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--glow);
         }
 
         /* Header */
@@ -155,6 +190,11 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav-links {
@@ -167,11 +207,28 @@
             color: var(--text-primary);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: color 0.3s, transform 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s;
         }
 
         .nav-links a:hover {
             color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .theme-toggle {
@@ -183,12 +240,24 @@
             cursor: pointer;
             color: var(--text-primary);
             font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg) scale(1.1);
+            background: var(--primary);
+            color: white;
         }
 
         .hamburger {
             display: none;
             font-size: 1.8rem;
             cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .hamburger:hover {
+            transform: scale(1.1);
         }
 
         /* Hero */
@@ -214,6 +283,12 @@
             font-size: 0.85rem;
             color: var(--primary);
             margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .hero-image {
@@ -227,6 +302,18 @@
             border-radius: 2rem;
             border: 3px solid var(--primary);
             box-shadow: var(--card-shadow);
+            transition: all 0.5s;
+            animation: heroFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .hero-image img:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 30px 60px -15px rgba(59, 130, 246, 0.5);
         }
 
         .social-icons {
@@ -244,12 +331,31 @@
             align-items: center;
             justify-content: center;
             color: var(--text-primary);
-            transition: all 0.2s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icons a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+
+        .social-icons a:hover::before {
+            left: 0;
         }
 
         .social-icons a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
+            color: white;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: var(--glow);
         }
 
         /* Skills Grid Enhanced */
@@ -264,12 +370,32 @@
             border-radius: 1.5rem;
             padding: 1.8rem;
             border: 1px solid var(--border);
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
         }
 
         .skill-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             border-color: var(--primary);
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.3);
         }
 
         .skill-tags {
@@ -285,6 +411,15 @@
             border-radius: 9999px;
             font-size: 0.85rem;
             font-weight: 500;
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px -5px rgba(59, 130, 246, 0.5);
         }
 
         /* Projects */
@@ -299,12 +434,31 @@
             border-radius: 1.5rem;
             overflow: hidden;
             border: 1px solid var(--border);
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .project-card:hover::after {
+            opacity: 1;
         }
 
         .project-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-10px) scale(1.02);
             border-color: var(--primary);
+            box-shadow: 0 30px 50px -20px rgba(59, 130, 246, 0.4);
         }
 
         .project-content {
@@ -325,6 +479,12 @@
             border-radius: 9999px;
             font-size: 0.7rem;
             font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tech-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px -3px rgba(59, 130, 246, 0.5);
         }
 
         /* Timeline */
@@ -338,6 +498,12 @@
             padding-left: 2rem;
             margin-bottom: 2.5rem;
             border-left: 3px solid var(--primary);
+            transition: all 0.4s;
+        }
+
+        .timeline-item:hover {
+            border-left-color: var(--accent);
+            padding-left: 2.5rem;
         }
 
         .timeline-dot {
@@ -348,6 +514,99 @@
             height: 15px;
             background: var(--accent);
             border-radius: 50%;
+            transition: all 0.4s;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+        }
+
+        /* Contact Section Enhanced */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: var(--bg-secondary);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .contact-card:hover::before {
+            opacity: 1;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 25px 50px -15px rgba(59, 130, 246, 0.3);
+        }
+
+        .contact-card i {
+            transition: all 0.4s;
+        }
+
+        .contact-card:hover i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* WhatsApp specific */
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E) !important;
+            border: none !important;
+        }
+
+        .whatsapp-btn:hover {
+            box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.5) !important;
+        }
+
+        /* Resume button */
+        .resume-btn {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+        }
+
+        .resume-btn:hover {
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5) !important;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        footer a:hover {
+            transform: translateY(-3px) scale(1.2);
+            color: var(--primary) !important;
         }
 
         /* Responsive */
@@ -365,7 +624,8 @@
                 flex-direction: column;
                 align-items: center;
                 padding: 2rem;
-                transition: 0.3s;
+                transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             }
             .nav-links.active {
                 left: 0;
@@ -376,20 +636,58 @@
             h1 {
                 font-size: 2.5rem;
             }
+            .social-icons {
+                justify-content: center;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .contact-card {
-            background: var(--bg-secondary);
-            border-radius: 1.5rem;
-            padding: 2rem;
-            text-align: center;
+        /* Badge variants */
+        .award-badge {
+            display: inline-block;
+            background: #f59e0b20;
+            color: #f59e0b;
+            padding: 0.3rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #f59e0b40;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+        .award-badge:hover {
+            transform: scale(1.05);
+            background: #f59e0b30;
+        }
+        .development-badge {
+            display: inline-block;
+            background: #3b82f620;
+            color: #3b82f6;
+            padding: 0.3rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #3b82f640;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+        .development-badge:hover {
+            transform: scale(1.05);
+            background: #3b82f630;
         }
 
-        footer {
-            background: var(--bg-secondary);
-            padding: 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border);
+        /* Scroll reveal animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -415,13 +713,14 @@
         <div class="container">
             <div class="hero-grid">
                 <div class="hero-text" data-aos="fade-right">
-                    <div class="badge">✨ Full Stack Engineer | Innovator</div>
+                    <div class="badge">✨ Full Stack Engineer | Next.js Specialist</div>
                     <h1>Aditya Dahiya</h1>
-                    <p style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--text-secondary);">Building scalable, intelligent web solutions with modern tech stacks.  hands-on experience in React, Node.js, and AI integrations.</p>
+                    <p style="font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--text-secondary);">Building scalable, intelligent web solutions with Next.js, React, Node.js, and AI integrations. Hands-on experience in modern full-stack development.</p>
                     <div class="social-icons">
-                        <a href="https://github.com/adityadahiya12" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/aditya-44b2a0271" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="mailto:adityadahiya122004@gmail.com"><i class="fas fa-envelope"></i></a>
+                        <a href="https://github.com/adityadahiya12" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/aditya12a12a12a" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="mailto:adityadahiya122004@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                        <a href="https://wa.me/918708503491" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
                 <div class="hero-image" data-aos="fade-left">
@@ -440,11 +739,11 @@
             <!-- Languages -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>💻 Programming Languages</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">Java</span>
                     <span class="skill-tag">Python</span>
                     <span class="skill-tag">JavaScript (ES6+)</span>
+                    <span class="skill-tag">TypeScript</span>
                     <span class="skill-tag">HTML5</span>
                     <span class="skill-tag">CSS3</span>
                     <span class="skill-tag">SQL</span>
@@ -454,33 +753,33 @@
             <!-- Frontend -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>🎨 Frontend Development</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">React.js</span>
+                    <span class="skill-tag">Next.js</span>
                     <span class="skill-tag">Tailwind CSS</span>
                     <span class="skill-tag">Responsive Design</span>
                     <span class="skill-tag">React Hooks</span>
                     <span class="skill-tag">Context API</span>
+                    <span class="skill-tag">Angular</span>
                 </div>
             </div>
 
             <!-- Backend -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>⚙️ Backend Development</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">Node.js</span>
                     <span class="skill-tag">Express.js</span>
                     <span class="skill-tag">FastAPI</span>
                     <span class="skill-tag">REST APIs</span>
                     <span class="skill-tag">JWT Authentication</span>
+                    <span class="skill-tag">Next.js API Routes</span>
                 </div>
             </div>
 
             <!-- Database -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>🗄️ Databases</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">MongoDB</span>
                     <span class="skill-tag">MySQL</span>
@@ -492,7 +791,6 @@
             <!-- Libraries -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>📚 Libraries & Frameworks</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">NumPy</span>
                     <span class="skill-tag">Pandas</span>
@@ -507,7 +805,6 @@
             <!-- Tools -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>🛠️ Tools & Platforms</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">Git</span>
                     <span class="skill-tag">GitHub</span>
@@ -515,13 +812,14 @@
                     <span class="skill-tag">Postman</span>
                     <span class="skill-tag">Figma</span>
                     <span class="skill-tag">Vercel</span>
+                    <span class="skill-tag">Fast2SMS</span>
+                    <span class="skill-tag">Airtel LDT</span>
                 </div>
             </div>
 
             <!-- Soft Skills -->
             <div class="skill-card" data-aos="fade-up">
                 <h3>🤝 Professional Skills</h3>
-
                 <div class="skill-tags">
                     <span class="skill-tag">Problem Solving</span>
                     <span class="skill-tag">Team Collaboration</span>
@@ -548,20 +846,18 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>🌍 TRANSFLY · SIH 2025 Grand Finalist</h3>
-
                     <p>
                         AI-powered multilingual translation platform using OCR,
                         NLP, Speech-to-Text and Text-to-Speech. Selected as
                         Smart India Hackathon 2025 Grand Finalist.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">OCR</span>
                         <span class="tech-tag">NLP</span>
                         <span class="tech-tag">FastAPI</span>
                         <span class="tech-tag">React</span>
+                        <span class="tech-tag">Next.js</span>
                     </div>
-
                     <span class="award-badge">🏆 Grand Finalist</span>
                 </div>
             </div>
@@ -570,24 +866,18 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>🎸 MahiVerse</h3>
-
                     <p>
                         Real-time chatting engagement platform featuring secure login,
                         media sharing, community interactions and live updates.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">Real-Time Chat</span>
                         <span class="tech-tag">Supabase</span>
                         <span class="tech-tag">React</span>
+                        <span class="tech-tag">Next.js</span>
                         <span class="tech-tag">Tailwind</span>
                     </div>
-
-                    <a href="https://mahi-verse.vercel.app/login"
-                       target="_blank"
-                       class="btn">
-                        Live Demo →
-                    </a>
+                    <a href="https://mahi-verse.vercel.app/login" target="_blank" class="btn">Live Demo →</a>
                 </div>
             </div>
 
@@ -595,24 +885,18 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>✈️ Asset Management System</h3>
-
                     <p>
                         Developed during AAI internship to manage airport assets,
                         maintenance alerts and lifecycle tracking.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">JWT Auth</span>
                         <span class="tech-tag">Role Access</span>
                         <span class="tech-tag">MongoDB</span>
                         <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Next.js</span>
                     </div>
-
-                    <a href="https://adityadahiya12.github.io/AAI_asset_management_system/"
-                       target="_blank"
-                       class="btn">
-                        Live Demo →
-                    </a>
+                    <a href="https://adityadahiya12.github.io/AAI_asset_management_system/" target="_blank" class="btn">Live Demo →</a>
                 </div>
             </div>
 
@@ -620,24 +904,17 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>💊 Cyber Pharma 🥇</h3>
-
                     <p>
                         Healthcare platform integrating telemedicine,
                         blood-bank access, lab bookings and medicine delivery.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">Healthcare</span>
                         <span class="tech-tag">AI Support</span>
                         <span class="tech-tag">React</span>
                         <span class="tech-tag">Firebase</span>
                     </div>
-
-                    <a href="https://adityadahiya12.github.io/CyberPharma/"
-                       target="_blank"
-                       class="btn">
-                        Live Demo →
-                    </a>
+                    <a href="https://adityadahiya12.github.io/CyberPharma/" target="_blank" class="btn">Live Demo →</a>
                 </div>
             </div>
 
@@ -645,22 +922,17 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>🚗 Car Rental Platform</h3>
-
                     <p>
                         MERN-based vehicle rental system with secure booking,
                         authentication and admin management dashboard.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">MERN Stack</span>
                         <span class="tech-tag">JWT</span>
                         <span class="tech-tag">Bookings</span>
                         <span class="tech-tag">Dashboard</span>
                     </div>
-
-                    <span class="development-badge">
-                        🚧 Live Demo Under Development
-                    </span>
+                    <span class="development-badge">🚧 Live Demo Under Development</span>
                 </div>
             </div>
 
@@ -668,24 +940,17 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>📚 StudyVibes</h3>
-
                     <p>
                         Student productivity platform with Pomodoro timer,
                         focus music, task management and study analytics.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">Pomodoro</span>
                         <span class="tech-tag">Analytics</span>
                         <span class="tech-tag">Firebase</span>
                         <span class="tech-tag">React</span>
                     </div>
-
-                    <a href="https://adityadahiya12.github.io/StudyVibes/"
-                       target="_blank"
-                       class="btn">
-                        Live Demo →
-                    </a>
+                    <a href="https://adityadahiya12.github.io/StudyVibes/" target="_blank" class="btn">Live Demo →</a>
                 </div>
             </div>
 
@@ -693,37 +958,28 @@
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>📖 Exam Helper</h3>
-
                     <p>
                         Collaborative exam preparation platform with notes,
                         quizzes and real-time doubt solving.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">Socket.io</span>
                         <span class="tech-tag">MERN</span>
                         <span class="tech-tag">Notes</span>
                         <span class="tech-tag">Quizzes</span>
                     </div>
-
-                    <a href="https://nishikantkumar-98.github.io/StudyHelp/"
-                       target="_blank"
-                       class="btn">
-                        Live Demo →
-                    </a>
+                    <a href="https://nishikantkumar-98.github.io/StudyHelp/" target="_blank" class="btn">Live Demo →</a>
                 </div>
             </div>
 
-            <!-- Python Project -->
+            <!-- Retail Analytics -->
             <div class="project-card" data-aos="fade-up">
                 <div class="project-content">
                     <h3>🐍 Retail Analytics Dashboard</h3>
-
                     <p>
                         Data analytics dashboard using Python and Machine
                         Learning to uncover customer purchasing trends.
                     </p>
-
                     <div class="project-tech">
                         <span class="tech-tag">Python</span>
                         <span class="tech-tag">Pandas</span>
@@ -741,12 +997,26 @@
         <div class="container">
             <h2 data-aos="fade-up">💼 Professional Journey</h2>
             <div class="timeline">
-                <!-- Current QSpider intern (February 2026 - Present) -->
+                <!-- Anhad Naad Foods Pvt. Ltd. (new) -->
+                <div class="timeline-item" data-aos="fade-up">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Full Stack Developer</h3>
+                        <p style="color: var(--primary); font-weight: 600;">Anhad Naad Foods Pvt. Ltd. | Work from Home | Jul 2026 – Present</p>
+                        <ul style="margin-top: 0.8rem; list-style: none;">
+                            <li>✓ Developed and maintained startup web application using Next.js, React, and Node.js.</li>
+                            <li>✓ Built responsive frontend interfaces with Tailwind CSS and integrated backend APIs.</li>
+                            <li>✓ Managed databases (MongoDB, SQL), third-party integrations, testing, and deployment on Vercel.</li>
+                            <li>✓ Optimized application performance, resolved technical issues, and improved load times by 40%.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Current QSpider intern -->
                 <div class="timeline-item" data-aos="fade-up">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <h3>Java Full Stack Developer Intern</h3>
-                        <p style="color: var(--primary); font-weight: 600;">QSpider | Gurgaon | Feb 2026 – Present</p>
+                        <p style="color: var(--primary); font-weight: 600;">QSpider | Gurgaon | Feb 2026 – Jul 2026</p>
                         <ul style="margin-top: 0.8rem; list-style: none;">
                             <li>✓ Architecting enterprise-grade full-stack solutions using Spring Boot, Hibernate, and React.</li>
                             <li>✓ Collaborating on microservices and implementing secure RESTful APIs.</li>
@@ -771,7 +1041,7 @@
         </div>
     </section>
 
-    <!-- Awards & Achievements Section (SIH grand finalist + coding mania) -->
+    <!-- Awards & Achievements Section -->
     <section id="awards" style="background: var(--bg-secondary);">
         <div class="container">
             <h2 data-aos="fade-up">🏅 Honors & Achievements</h2>
@@ -787,17 +1057,53 @@
     <section id="contact">
         <div class="container">
             <h2 data-aos="fade-up">📬 Let's Connect</h2>
-            <div style="max-width: 700px; margin: 0 auto; display: grid; gap: 2rem;">
+            <div class="contact-grid">
+                <!-- Email Card -->
                 <div class="contact-card" data-aos="fade-up">
                     <i class="fas fa-envelope" style="font-size: 2rem; color: var(--primary);"></i>
-                    <h3>adityadahiya122004@gmail.com</h3>
-                    <p>Open for freelance collaborations, full-time opportunities, and tech discussions.</p>
-                    <a href="mailto:adityadahiya122004@gmail.com" class="btn">Send a message <i class="fas fa-arrow-right"></i></a>
+                    <h3>Email</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">adityadahiya122004@gmail.com</p>
+                    <a href="mailto:adityadahiya122004@gmail.com" class="btn" style="margin-top: 1rem;">Send Message <i class="fas fa-arrow-right"></i></a>
                 </div>
+
+                <!-- Phone Card -->
                 <div class="contact-card" data-aos="fade-up">
-                    <i class="fab fa-github" style="font-size: 2rem; color: var(--primary);"></i>
-                    <h3>github.com/adityadahiya12</h3>
-                    <a href="https://github.com/adityadahiya12" target="_blank" class="btn-outline btn" style="background: transparent;">View Code →</a>
+                    <i class="fas fa-phone-alt" style="font-size: 2rem; color: var(--secondary);"></i>
+                    <h3>Phone</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">+91 8708503491</p>
+                    <a href="tel:+918708503491" class="btn" style="margin-top: 1rem; background: linear-gradient(135deg, #10b981, #06b6d4);">Call Now <i class="fas fa-phone"></i></a>
+                </div>
+
+                <!-- WhatsApp Card -->
+                <div class="contact-card" data-aos="fade-up">
+                    <i class="fab fa-whatsapp" style="font-size: 2rem; color: #25D366;"></i>
+                    <h3>WhatsApp</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">Chat with me instantly</p>
+                    <a href="https://wa.me/918708503491?text=Hi%20Aditya%2C%20I%20found%20your%20portfolio!" target="_blank" class="btn whatsapp-btn" style="margin-top: 1rem;">Connect <i class="fab fa-whatsapp"></i></a>
+                </div>
+
+                <!-- LinkedIn Card -->
+                <div class="contact-card" data-aos="fade-up">
+                    <i class="fab fa-linkedin-in" style="font-size: 2rem; color: #0077b5;"></i>
+                    <h3>LinkedIn</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">aditya12a12a12a</p>
+                    <a href="https://www.linkedin.com/in/aditya12a12a12a" target="_blank" class="btn" style="margin-top: 1rem; background: linear-gradient(135deg, #0077b5, #00a0dc);">Connect <i class="fab fa-linkedin-in"></i></a>
+                </div>
+
+                <!-- GitHub Card -->
+                <div class="contact-card" data-aos="fade-up">
+                    <i class="fab fa-github" style="font-size: 2rem; color: var(--text-primary);"></i>
+                    <h3>GitHub</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">github.com/adityadahiya12</p>
+                    <a href="https://github.com/adityadahiya12" target="_blank" class="btn" style="margin-top: 1rem; background: linear-gradient(135deg, #333, #555);">View Code <i class="fab fa-github"></i></a>
+                </div>
+
+                <!-- Resume Card -->
+                <div class="contact-card" data-aos="fade-up">
+                    <i class="fas fa-file-pdf" style="font-size: 2rem; color: #ef4444;"></i>
+                    <h3>Resume</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">Download my latest resume</p>
+                    <a href="https://drive.google.com/file/d/1lqG5pt-Xcwex9ofYYkME7qd-PSf8zmhi/view?usp=sharing" target="_blank" class="btn resume-btn" style="margin-top: 1rem;">View Resume <i class="fas fa-external-link-alt"></i></a>
                 </div>
             </div>
         </div>
@@ -805,10 +1111,12 @@
 
     <footer>
         <div class="container">
-            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem;">
-                <a href="https://github.com/adityadahiya12" style="color: var(--text-primary);"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/aditya-44b2a0271" style="color: var(--text-primary);"><i class="fab fa-linkedin-in"></i></a>
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <a href="https://github.com/adityadahiya12" target="_blank" style="color: var(--text-primary);"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/aditya12a12a12a" target="_blank" style="color: var(--text-primary);"><i class="fab fa-linkedin-in"></i></a>
                 <a href="mailto:adityadahiya122004@gmail.com" style="color: var(--text-primary);"><i class="fas fa-envelope"></i></a>
+                <a href="tel:+918708503491" style="color: var(--text-primary);"><i class="fas fa-phone-alt"></i></a>
+                <a href="https://wa.me/918708503491" target="_blank" style="color: var(--text-primary);"><i class="fab fa-whatsapp"></i></a>
             </div>
             <p>© 2026 Aditya Dahiya — Full Stack Engineer. Built with precision and passion.</p>
         </div>
@@ -859,6 +1167,24 @@
                 const target = document.querySelector(this.getAttribute('href'));
                 if(target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
             });
+        });
+
+        // Add subtle parallax effect on hero image
+        document.addEventListener('mousemove', (e) => {
+            const heroImg = document.querySelector('.hero-image img');
+            if (heroImg) {
+                const x = (window.innerWidth / 2 - e.pageX) / 50;
+                const y = (window.innerHeight / 2 - e.pageY) / 50;
+                heroImg.style.transform = `translate(${x}px, ${y}px) rotate(${x/2}deg)`;
+            }
+        });
+
+        // Reset transform on mouse leave
+        document.addEventListener('mouseleave', () => {
+            const heroImg = document.querySelector('.hero-image img');
+            if (heroImg) {
+                heroImg.style.transform = '';
+            }
         });
     </script>
 </body>
